@@ -32,8 +32,6 @@ module.exports = {
     })
   ],
   devServer: {
-    devMiddleware: {
-      writeToDisk: true
-    }
+    allowedHosts: "all"
   }
 };

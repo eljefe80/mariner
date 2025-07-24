@@ -1,4 +1,4 @@
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { Story } from "@storybook/react";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";

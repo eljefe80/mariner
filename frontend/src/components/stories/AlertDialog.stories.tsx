@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { Story } from "@storybook/react";
 import React from "react";
 import { AlertServiceProvider, useAlert } from "../AlertServiceProvider";

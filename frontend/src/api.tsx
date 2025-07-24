@@ -218,7 +218,7 @@ export const withAPI = <Props extends WithAPIProps>(
   ): React.ReactElement => {
     const api = new API();
     api._alertFn = useAlert();
-    return <Component {...(props as Props)} api={api} />;
+    return <React.Fragment><Component {...(props as Props)} api={api} /></React.Fragment>;
   };
   return WithAPI;
 };

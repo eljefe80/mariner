@@ -1,4 +1,6 @@
-FROM balenalib/raspberry-pi-debian:latest
+FROM debian:bookworm
+#FROM balenalib/aarch64-debian-node:20-latest
+#balenalib/raspberry-pi-debian:latest
 
 RUN apt-get update && apt-get -y upgrade && apt-get update
 RUN apt-get -y install sudo dpkg-dev debhelper dh-virtualenv \
@@ -12,18 +14,27 @@ RUN bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN bash -c "curl -sSL https://install.python-poetry.org | python3 -"
 
-ENV PATH=$PATH:/root/.local/bin \
-  DEB_BUILD_ARCH=armhf \
-  DEB_BUILD_ARCH_BITS=32 \
+ENV PATH=$PATH:~/.local/bin \
+  DEB_BUILD_ARCH=arm64 \
+  DEB_BUILD_ARCH_BITS=64 \
   PIP_DEFAULT_TIMEOUT=600 \
   PIP_TIMEOUT=600 \
   PIP_RETRIES=100
 
-RUN mkdir /build
+
+
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+RUN apt-get install -y nodejs
+RUN npm install -g npm@11.4.2
+RUN npm install -g yarn
 COPY . /build/
 
 WORKDIR /build
 RUN /root/.local/bin/poetry build
+
+WORKDIR /build/frontend
+RUN npm i
+RUN yarn build
 
 WORKDIR /build/dist
 RUN dpkg-buildpackage -us -uc
