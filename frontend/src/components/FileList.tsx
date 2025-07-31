@@ -7,8 +7,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { createStyles, WithStyles } from "@mui/material/styles";
-import { withStyles } from "tss-react/mui";
 import FolderIcon from "@mui/icons-material/Folder";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import LayersIcon from "@mui/icons-material/Layers";
@@ -103,17 +101,8 @@ export interface FileListState {
   data?: FileListAPIResponse;
 }
 
-const styles = () =>
-  createStyles({
-    loadingContainer: {
-      flexGrow: 1,
-      padding: 18,
-      textAlign: "center",
-    },
-  });
-
 class FileList extends React.Component<
-  WithStyles & WithAPIProps,
+  WithAPIProps,
   FileListState
 > {
   state: FileListState = {
@@ -142,7 +131,13 @@ class FileList extends React.Component<
   _renderContent(): React.ReactElement {
     if (this.state.isLoading) {
       return (
-        <Box className={this.props.classes.loadingContainer}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            padding: 18,
+            textAlign: "center",
+          }}
+        >
           <CircularProgress />
         </Box>
       );
@@ -216,4 +211,4 @@ class FileList extends React.Component<
   }
 }
 
-export default withStyles(withAPI(FileList), styles);
+export default withAPI(FileList);

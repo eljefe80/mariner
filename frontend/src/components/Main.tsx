@@ -7,111 +7,26 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { ThemeProvider, useTheme } from "@mui/material/styles";
+import { ThemeProvider, useTheme, styled } from "@mui/material/styles";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-//import withWidth, { WithWidth } from "@material-ui/core/withWidth";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
-import clsx from "clsx";
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import theme from "../theme";
 import FileList from "./FileList";
 import PrintStatus from "./PrintStatus";
-import { makeStyles } from "tss-react/mui";
 const drawerWidth = 240;
 
-const useStyles = makeStyles()((theme)=>{
-  return {
-    root: {
-      display: "flex",
-    },
-    toolbar: {
-      paddingRight: 24,
-    },
-    toolbarIcon: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "flex-end",
-      padding: "0 8px",
-      ...theme.mixins.toolbar,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    menuButton: {
-      marginRight: 36,
-    },
-    menuButtonHidden: {
-      display: "none",
-    },
-    title: {
-      flexGrow: 1,
-    },
-    drawerPaper: {
-      position: "relative",
-      whiteSpace: "nowrap",
-      width: drawerWidth,
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }, 
-    drawerPaperClose: {
-      overflowX: "hidden",
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
-    },
-    appBarSpacer: theme.mixins.toolbar,
-    content: {
-      flexGrow: 1,
-      height: "100vh",
-      overflow: "auto",
-    },
-    container: {
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-    },
-}});
+const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
-function useWidth() {
-  const theme = useTheme();
-  const keys = [...theme.breakpoints.keys].reverse();
-  return (
-    keys.reduce((output, key) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return !output && matches ? key : output;
-    }, null) || 'xs'
-  );
-}
 
-export default function Main(): React.ReactElement {
-  const classes = useStyles();
-  const width = useWidth();
+function Main(): React.ReactElement {
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -119,7 +34,7 @@ export default function Main(): React.ReactElement {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const isSmallScreen = /xs|sm/.test(width);
+  const isSmallScreen = theme.breakpoints.up('sm'); 
   const drawerVariant = isSmallScreen ? "temporary" : "permanent";
   const handleDrawerItemClick = () => {
     if (isSmallScreen) {
@@ -128,23 +43,51 @@ export default function Main(): React.ReactElement {
   };
 
   return (
-    <div className={classes.root}>
+    <div
+      sx={{
+        display: "flex",
+      }}
+    >
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <AppBar
           position="absolute"
-          className={clsx(classes.appBar, open && classes.appBarShift)}
+          sx={{
+            ...(true && {
+              zIndex: theme.zIndex.drawer + 1,
+              transition: theme.transitions.create(["width", "margin"], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+              }),
+            }),
+            ...(open && {
+              marginLeft: 4,
+              width: `calc(100% - ${drawerWidth}px)`,
+              transition: theme.transitions.create(["width", "margin"], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+            }),
+          }}
         >
-          <Toolbar className={classes.toolbar}>
+          <Toolbar
+            sx={{
+              paddingRight: 24,
+            }}
+          >
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
-              className={clsx(
-                classes.menuButton,
-                open && classes.menuButtonHidden
-              )}
+              style={{
+                marginRight: '36px',
+              }}
+              sx={{
+                ...(open && {
+                  display: "none",
+                }),
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -153,7 +96,9 @@ export default function Main(): React.ReactElement {
               variant="h6"
               color="inherit"
               noWrap
-              className={classes.title}
+              sx={{
+                flexGrow: 1,
+              }}
             >
               mariner3d
             </Typography>
@@ -161,22 +106,53 @@ export default function Main(): React.ReactElement {
         </AppBar>
         <SwipeableDrawer
           variant={drawerVariant}
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          PaperProps={{
+            sx: {
+              width: drawerWidth,
+            }
+          }}
+          sx={{
+            ...(true && {
+              position: "relative",
+              whiteSpace: "nowrap",
+              transition: theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+               }),
+            }),
+            ...(!open && {
+              overflowX: "hidden",
+              transition: theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+              }),
+              width: theme.spacing(7),
+              [theme.breakpoints.up("sm")]: {
+                width: theme.spacing(9),
+              },
+            }),
           }}
           open={open}
           onOpen={handleDrawerOpen}
           onClose={handleDrawerClose}
         >
-          <div className={classes.toolbarIcon}>
+
+          <Offset
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              padding: "0 8px",
+            }}
+          >
             <IconButton onClick={handleDrawerClose}>
               <ChevronLeftIcon button="true" />
             </IconButton>
-          </div>
+          </Offset>
           <Divider />
           <List>
             <ListItem
-              button
+              button="true"
               key="home"
               component={Link}
               to="/"
@@ -188,7 +164,7 @@ export default function Main(): React.ReactElement {
               <ListItemText primary="Home" />
             </ListItem>
             <ListItem
-              button
+              button="true"
               key="files"
               component={Link}
               to="/files"
@@ -201,9 +177,21 @@ export default function Main(): React.ReactElement {
             </ListItem>
           </List>
         </SwipeableDrawer>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="sm" className={classes.container}>
+        <main
+          sx={{
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+          }}
+        >
+          <Offset />
+          <Container
+            maxWidth="sm"
+            sx={{
+              paddingTop: theme.spacing(2),
+              paddingBottom: theme.spacing(2),
+            }}
+          >
             <Routes>
               <Route path="/" element={<PrintStatus />} />
               <Route path="/files" element={<FileList />} />
@@ -214,3 +202,4 @@ export default function Main(): React.ReactElement {
     </div>
   );
 }
+export default Main

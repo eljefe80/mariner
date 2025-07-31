@@ -7,7 +7,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import { makeStyles } from "tss-react/mui";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -93,18 +92,6 @@ class FileDetails extends React.Component<FileDetailsProps, FileDetailsState> {
   }
 }
 
-const useStyles = makeStyles()((theme)=>{
-  return {
-    dialogTitle: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    moreOptionsButton: {
-      padding: 4,
-    },
-}});
-
 const FileDetailsWithAPI = withAPI(FileDetails);
 
 export default function FileDetailsDialog(
@@ -117,7 +104,6 @@ export default function FileDetailsDialog(
     onDelete: () => void;
   } & DialogProps
 ): React.ReactElement {
-  const classes = useStyles();
   const [isDeleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] =
     React.useState(false);
   const handleDeleteDialogClose = () => setDeleteConfirmationDialogOpen(false);
@@ -147,12 +133,21 @@ export default function FileDetailsDialog(
 
   return (
     <Dialog {...props}>
-      <DialogTitle className={classes.dialogTitle} disableTypography>
+      <DialogTitle
+       sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+        disableTypography
+      >
         <Typography component="h2" variant="h6">
           {props.filename}
         </Typography>
         <IconButton
-          className={classes.moreOptionsButton}
+          ss={{
+            padding: 4,
+          }}
           onClick={() => setDeleteConfirmationDialogOpen(true)}
         >
           <DeleteForeverIcon />

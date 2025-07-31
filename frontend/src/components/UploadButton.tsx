@@ -1,21 +1,12 @@
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import { createStyles, WithStyles } from "@mui/material/styles";
-import { withStyles } from "tss-react/mui";
 import PublishIcon from "@mui/icons-material/Publish";
 import nullthrows from "nullthrows";
 import React from "react";
 import { withAPI, WithAPIProps } from "../api";
 import { getSupportedExtensions, setState } from "../utils";
 
-const styles = () =>
-  createStyles({
-    input: {
-      display: "none",
-    },
-  });
-
-export interface UploadButtonProps extends WithStyles, WithAPIProps {
+export interface UploadButtonProps extends WithAPIProps {
   onUploadFinished: () => void;
 }
 
@@ -55,12 +46,14 @@ class UploadButton extends React.Component<
         <input
           ref={this.uploadButtonRef}
           accept={getSupportedExtensions()}
-          className={classes.input}
           id="upload-button"
           multiple
           type="file"
           onChange={async () => await this._onUploadStart()}
           disabled={isUploading}
+          sx={{
+            display: "none",
+          }}
         />
         <label htmlFor="upload-button">
           <Button
@@ -88,4 +81,4 @@ class UploadButton extends React.Component<
   }
 }
 
-export default withStyles(withAPI(UploadButton), styles);
+export default withAPI(UploadButton);

@@ -1,4 +1,3 @@
-import "core-js";
 import axios from "axios";
 import nullthrows from "nullthrows";
 import React from "react";

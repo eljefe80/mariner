@@ -6,8 +6,6 @@ import CardHeader from "@mui/material/CardHeader";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
-import { createStyles, WithStyles } from "@mui/material/styles";
-import { withStyles } from "tss-react/mui";
 import Typography from "@mui/material/Typography";
 import CheckIcon from "@mui/icons-material/Check";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -19,29 +17,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { withAPI, WithAPIProps } from "../api";
 import { getPrinterDisplayName, renderTime, sleep } from "../utils";
-
-const styles = () =>
-  createStyles({
-    playButton: {
-      padding: 6,
-    },
-    playIcon: {
-      height: 38,
-      width: 38,
-    },
-    gridRoot: {
-      flexGrow: 1,
-      padding: 12,
-      paddingTop: 20,
-      paddingBottom: 20,
-      textAlign: "center",
-    },
-    loadingContainer: {
-      flexGrow: 1,
-      padding: 18,
-      textAlign: "center",
-    },
-  });
 
 type PrinterState =
   | "IDLE"
@@ -79,7 +54,7 @@ export interface PrintStatusState {
 const WAIT_BEFORE_REFRESHING_STATUS_MS = 250;
 
 class PrintStatus extends React.Component<
-  WithStyles<typeof styles> & WithAPIProps,
+  WithAPIProps,
   PrintStatusState
 > {
   intervalID: number | undefined;
@@ -188,7 +163,13 @@ class PrintStatus extends React.Component<
 
     if (this.state.isLoading) {
       return (
-        <Box className={classes.loadingContainer}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            padding: 18,
+            textAlign: "center",
+          }}
+        >
           <CircularProgress />
         </Box>
       );
@@ -261,7 +242,15 @@ class PrintStatus extends React.Component<
           </Box>
         </Box>
 
-        <div className={classes.gridRoot}>
+        <div className={classes.gridRoot}
+          sx={{
+            flexGrow: 1,
+            padding: 12,
+            paddingTop: 20,
+            paddingBottom: 20,
+            textAlign: "center",
+          }}
+        >
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <Typography variant="h5" color="textPrimary" display="inline">
@@ -311,4 +300,4 @@ class PrintStatus extends React.Component<
   }
 }
 
-export default withStyles(withAPI(PrintStatus), styles);
+export default withAPI(PrintStatus);
